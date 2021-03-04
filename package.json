@@ -1,0 +1,35 @@
+{
+  "name": "cloud-backend",
+  "version": "1.0.0",
+  "description": "A backend system for the cloud",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clonalejandro/cloud-backend.git"
+  },
+  "keywords": [
+    "backend",
+    "cloud",
+    "system",
+    "nodejs",
+    "mongodb"
+  ],
+  "author": "clonalejandro",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/clonalejandro/cloud-backend/issues"
+  },
+  "homepage": "https://github.com/clonalejandro/cloud-backend#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "eslint": "^7.21.0",
+    "express": "^4.17.1",
+    "fs": "^0.0.1-security",
+    "http": "^0.0.1-security",
+    "https": "^1.0.0",
+    "path": "^0.12.7"
+  }
+}
