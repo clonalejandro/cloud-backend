@@ -1,16 +1,10 @@
 module.exports = [
   {
     id: 'user',
-    type: 'post',
-    callback: (req, res) => {
-      //TODO: save User
-    },
-  },
-  {
-    id: 'user',
     type: 'get',
     callback: (req, res) => {
-      //TODO: return true || false
+      const { user } = req
+      res.send(user)
     },
   },
   {

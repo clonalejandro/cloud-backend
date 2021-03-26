@@ -1,6 +1,6 @@
-const Schema = require('mongoose').Schema
+const model = require('mongoose').model
 
-module.exports = new Schema({
+module.exports = model('Setting', {
   username: String,
   profile_picture: String,
   is_subscribed: Boolean,

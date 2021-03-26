@@ -1,6 +1,6 @@
-const Schema = require('mongoose').Schema
+const model = require('mongoose').model
 
-module.exports = new Schema({
+module.exports = model('Rank', {
   id: Number,
   name: String,
 })
