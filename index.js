@@ -1,11 +1,15 @@
 const express = require('express')
+const fileUpload = require('express-fileupload')
 const http = require('http')
 const https = require('https')
 const dotenv = require('dotenv').config()
 const server = express()
 const cl1b = require('./cl1b')
 const actions = require('./actions')
+const { setRouter, useAuth } = require('./utils/auth')
+const { connect_mongo } = require('./utils/mongo')
 const app = {
+  mongoURI: process.env.MONGODB_URI || 'mongodb://localhost/cloud',
   port: {
       http: process.env.PORT_HTTP || 3000,
       https: process.env.PORT_HTTPS || 3003
@@ -20,6 +24,10 @@ const app = {
 //TODO: Make a ratelimit
 server.use(express.urlencoded({ extended: false }))
 server.use(express.json())
+server.use(fileUpload({
+  abortOnLimit: true,
+  responseOnLimit: "File size limit"
+}))
 
 actions.forEach(action => {
   switch (action.type.toLowerCase()){
@@ -39,6 +47,11 @@ actions.forEach(action => {
       throw new Error('Unknown action type')            
   }
 })
+
+connect_mongo(app.mongoURI)
+
+setRouter(server)
+useAuth()
 
 https.createServer(app.ssl, server)
   .listen(app.port.https, cl1b.portHook(app.port.https))
