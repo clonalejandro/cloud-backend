@@ -1,4 +1,5 @@
 const express = require('express')
+const fileUpload = require('express-fileupload')
 const http = require('http')
 const https = require('https')
 const dotenv = require('dotenv').config()
@@ -23,6 +24,10 @@ const app = {
 //TODO: Make a ratelimit
 server.use(express.urlencoded({ extended: false }))
 server.use(express.json())
+server.use(fileUpload({
+  abortOnLimit: true,
+  responseOnLimit: "File size limit"
+}))
 
 actions.forEach(action => {
   switch (action.type.toLowerCase()){
