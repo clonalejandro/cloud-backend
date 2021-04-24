@@ -8,15 +8,20 @@ module.exports = [
     id: 'dir',
     type: 'get',
     callback: (req, res) => {
-      var { path } = req.body
+      const bannedFiles = process.env.BANNED_FILES.split(',')
+      var { path } = req.query
 
       path = replaceAll(path, '../')
+      path = `${cloudPath}/${req.user.username}/${path}`
 
       try {
-        res.send(fs.readdirSync(path).map(e => ({
-          name: e,
-          type: fs.statSync(`${path}/${e}`).isDirectory ? 'folder' : 'file',
-        })))
+        res.send(fs.readdirSync(path)
+          .filter(e => !bannedFiles.includes(e.toUpperCase()))
+          .map(e => ({
+            name: e,
+            type: fs.statSync(`${path}/${e}`).isDirectory() ? 'folder' : 'file',
+          }))
+        )
       }
       catch (err){
         console.error(err)
@@ -28,7 +33,7 @@ module.exports = [
     id: 'dir',
     type: 'post',
     callback: (req, res) => {
-      const { username } = req.body.user
+      const { username } = req.user
       var { path } = req.body
 
       path = replaceAll(path, '../')
@@ -47,14 +52,14 @@ module.exports = [
     id: 'dir',
     type: 'put',
     callback: (req, res) => {
-      var { currentDir } = req.body
-      var { newDir } = req.body
+      var { current_dir } = req.body
+      var { new_dir } = req.body
 
-      currentDir = replaceAll(currentDir, '../')
-      newDir = replaceAll(newDir, '../')
+      current_dir = `${cloudPath}/${req.user.username}/${replaceAll(current_dir, '../')}`
+      new_dir = `${cloudPath}/${req.user.username}/${replaceAll(new_dir, '../')}`
 
       try {
-        fs.renameSync(currentDir, newDir)
+        fs.renameSync(current_dir, new_dir)
         res.status(200).send('Ok')
       }
       catch (err){
@@ -71,7 +76,7 @@ module.exports = [
       path = replaceAll(path, '../')
 
       try {
-        fsExtra.removeSync(path)
+        fsExtra.removeSync(`${cloudPath}/${req.user.username}/${path}`)
         res.status(200).send('Ok')
       }
       catch (err){

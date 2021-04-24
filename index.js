@@ -1,4 +1,6 @@
 const express = require('express')
+const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
 const fileUpload = require('express-fileupload')
 const http = require('http')
 const https = require('https')
@@ -22,12 +24,16 @@ const app = {
 
 
 //TODO: Make a ratelimit
-server.use(express.urlencoded({ extended: false }))
-server.use(express.json())
+server.use(bodyParser.urlencoded({ extended: false }))
+server.use(bodyParser.json())
+server.use(cookieParser())
 server.use(fileUpload({
   abortOnLimit: true,
   responseOnLimit: "File size limit"
 }))
+
+setRouter(server)
+useAuth()
 
 actions.forEach(action => {
   switch (action.type.toLowerCase()){
@@ -49,9 +55,6 @@ actions.forEach(action => {
 })
 
 connect_mongo(app.mongoURI)
-
-setRouter(server)
-useAuth()
 
 https.createServer(app.ssl, server)
   .listen(app.port.https, cl1b.portHook(app.port.https))

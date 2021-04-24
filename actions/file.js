@@ -7,11 +7,11 @@ module.exports = [
     id: 'file',
     type: 'get',
     callback: (req, res) => {
-      var { path } = req.body
+      var { path } = req.query
       path = replaceAll(path, '../')
 
       try {
-        res.download(path)
+        res.download(`${cloudPath}/${req.user.username}/${path}`)
       }
       catch (err){
         console.error(err)
@@ -32,21 +32,14 @@ module.exports = [
   
         files.forEach(file => 
           file.mv(`${cloudPath}/${req.user.username}/${file.name}`)
-        )  
+        )
+
+        res.status(200).send('Ok')
       }
       catch (err){
         console.error(err)
         res.status(500).send(err.message)
       }
-    }
-  },
-  {
-    id: 'file',
-    type: 'put',
-    callback: (req, res) => {
-      var { path } = req.body
-      path = replaceAll(path, '../')
-
     }
   },
   {
@@ -57,7 +50,7 @@ module.exports = [
       path = replaceAll(path, '../')
 
       try {
-        fsExtra.removeSync(path)
+        fsExtra.removeSync(`${cloudPath}/${req.user.username}/${path}`)
         res.status(200).send('Ok')
       }
       catch (err){
